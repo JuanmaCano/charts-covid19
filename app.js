@@ -38,6 +38,7 @@
                 label: 'deaths',
                 borderColor: '#FF3D67',
                 data: deaths.map(item =>item.Cases),
+                
                 },
                 {
                 label: 'recovered',
@@ -82,6 +83,7 @@
                 }
             },
             tooltips: {
+                position: 'nearest',
                 backgroundColor: '#0066A1',
                 titleFontSize: 20,
                 xPadding: 20,
