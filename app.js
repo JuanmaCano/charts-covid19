@@ -119,9 +119,12 @@
 
             let txt = ''
             data.forEach(item=>{
-                let selected=''
-                country==item.Slug ? selected='selected' : ''
-                txt+=`<option data-subtext="${item.ISO2}" value="${item.Slug}" ${selected}>${item.Country}</option>`
+                // right now, not showed data from USA because data charging spend to much time
+                if(item.ISO2!='US') {
+                    let selected=''
+                    country==item.Slug ? selected='selected' : ''
+                    txt+=`<option data-subtext="${item.ISO2}" value="${item.Slug}" ${selected}>${item.Country}</option>`
+                }
             })
             // inject data for Select Country
             selectCountry.insertAdjacentHTML('beforeend',txt)
@@ -152,26 +155,34 @@
         canvas.classList.toggle('d-none')
     }
 
+    // bug: not works properly
+    // Country with Province need to be group by date, ignore Province
     function groupByDate(data){
 
         const diffDays=[...new Set(data.map(item=>item.Date))]
         
         let results=[]
         diffDays.forEach(item=> {
+
             let currentDay = new Intl.DateTimeFormat('en-US').format(new Date(item))
             let today = new Intl.DateTimeFormat('en-US').format(new Date())
-            
+            // usually today don't have data
             if(today!=currentDay){
+
                 let current = {}
                 let oneDay = data.filter(elem => new Date(elem.Date).getTime()===new Date(item).getTime())
-                let cases = oneDay.map(elem=>elem.Cases)
-                .reduce((totalCases, elem) => totalCases + elem)
-                current=oneDay[0]
+                const cases = 
+                oneDay.map(elem=>elem.Cases).reduce((totalCases, el) => totalCases + el)
+
+                current.Country=oneDay[0].Country
+                current.CountryCode=oneDay[0].CountryCode
+                current.Status=oneDay[0].Status
+                current.Date=oneDay[0].Date
                 current.Cases=cases            
                 results.push(current)
             }
         })
-        
+        debugger
         return results
         
     }
