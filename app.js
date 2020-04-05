@@ -13,8 +13,8 @@
     async function getData(country,status,days) {  
         const response = await fetch(`https://api.covid19api.com/country/${country}/status/${status}/live`)
         let data = await response.json()
-       
-        if(data[0].Province){
+      
+        if(data.length>0 && data[0].Province){
             //data=grouByDate(data)
             data=groupByDate(data)
         }
